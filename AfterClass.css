@@ -1,0 +1,40 @@
+.product-grid {
+    margin-top: 20px;
+    border: solid 1px;
+    border-color: black;
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.product-card {
+    width: calc(25% - 10px); /* 25% width for each product card with 10px margin between them */
+    margin-bottom: 20px; /* Add vertical spacing between rows */
+    box-sizing: border-box; /* Ensure the padding and border are included in the width */
+    border: 1px solid #ddd; /* Add a border for product cards (optional) */
+    padding: 10px;
+    text-align: center;
+}
+
+.product-info {
+    text-align: center;
+}
+
+.product-info img {
+    display: block; /* To center the image within the container */
+    margin: 0 auto; /* To center the image horizontally */
+}
+
+.product-info p {
+    margin: 10px 0; /* Add spacing between paragraphs */
+}
+
+.add-to-cart {
+    display: block; /* To make the button a block element */
+    margin: 0 auto; /* To center the button horizontally */
+}
+
+.product-card img {
+    max-width: 100%;
+}
