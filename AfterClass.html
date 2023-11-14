@@ -12,13 +12,13 @@
 <body>
     <div id="app">
         <header class="navbar" style="display: flex; justify-content: space-between; align-items: center;">
-            <span>
-                <p style="text-align: center;">After School Adventures</p>
-                <button class="fas fa-cart-arrow-down" style="margin-left: 1300px; position: absolute;"
+            <p style="text-align: center; margin-left: 590px; font-size: 25px;">After School Adventures
+                <button class="fas fa-cart-arrow-down"
+                    style="margin-left: 500px; position: absolute; background-color: #ffe14c; border: none; border-radius: 2px solid; padding: 4px;"
                     v-on:click="toggleCartPage" :disabled="cartItemCount === 0">
                     {{cartItemCount}}
                 </button>
-            </span>
+            </p>
         </header>
         <div v-if="showProduct">
             <nav>
@@ -34,7 +34,7 @@
                         <option value="location">Location</option>
                         <option value="availability">Availability</option>
                     </select>
-                    <label>Order By:</label>
+                    <label style="margin-left: 15px;">Order By:</label>
                     <select v-model="selectedOrder">
                         <option value="AscDesc">Ascending to Descending</option>
                         <option value="DescAsc">Descending to Ascending</option>
@@ -69,7 +69,7 @@
                 </div>
             </div>
         </div>
-        <div v-else>
+        <div class="cartPage" v-else>
             <h2>Shopping Cart</h2>
             <div v-if="cartItemCount === 0">Your cart is empty.</div>
             <div v-else>
@@ -85,14 +85,14 @@
                                 <p>Price: {{ getProductPrice(product.id) }} </p>
                                 <p>Location: {{ getProductLocation(product.id) }}</p>
                             </div>
-                            ƒ
                         </div>
                         <button v-on:click="removeFromCart(product.id)">Remove from Cart</button>
                     </div>
                 </div>
                 <p class="tprice">Total Price: {{ totalPrice }}</p>
                 <div class="checkout">
-                    <h2>Checkout</h2>
+                    <h2 style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">Checkout
+                    </h2>
                     <p>
                         Name:
                         <!-- this input field is bound to firstname in the order object -->
@@ -103,7 +103,7 @@
                         <!-- this input field is bound to lastname in the order object -->
                         <input type="number" v-model.trim="order.Phone">
                     </p>
-                    <button v-on:click="submitForm" :disabled="!validateDetails">Place Order</button>
+                    <button class="placeOrd" v-on:click="submitForm" :disabled="!validateDetails">Place Order</button>
                 </div>
             </div>
         </div>
