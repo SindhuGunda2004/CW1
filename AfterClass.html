@@ -11,6 +11,7 @@
 
 <body>
     <div id="app">
+        <!-- page heading along with the checkout button -->
         <header class="navbar" style="display: flex; justify-content: space-between; align-items: center;">
             <p style="text-align: center; margin-left: 590px; font-size: 25px;">After School Adventures
                 <button class="fas fa-cart-arrow-down"
@@ -21,11 +22,14 @@
             </p>
         </header>
         <div v-if="showProduct">
+            <!-- navigation area with search bar and sorting -->
             <nav>
+                <!-- search bar -->
                 <span class="searchbar"><input type="text" style="margin-left: 515px; font-size: 15px;"
                         placeholder="Search" v-model="searchVal">
 
                 </span>
+                <!-- sorting and ordering -->
                 <div class="sortby">
                     <label>Sort By:</label>
                     <select v-model="selectedSort">
@@ -42,6 +46,7 @@
                 </div>
             </nav>
 
+            <!-- displays all the products -->
             <div class="products-container">
                 <div v-for="product in searchingAndSortedProducts" class="product">
                     <div class="content">
@@ -69,6 +74,7 @@
                 </div>
             </div>
         </div>
+        <!-- this is the cart page or checkout page -->
         <div class="cartPage" v-else>
             <h2>Shopping Cart</h2>
             <div v-if="cartItemCount === 0">Your cart is empty.</div>
@@ -90,17 +96,16 @@
                     </div>
                 </div>
                 <p class="tprice">Total Price: {{ totalPrice }}</p>
+                <!-- form to enter details and place order for the subjects -->
                 <div class="checkout">
                     <h2 style="font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif">Checkout
                     </h2>
                     <p>
                         Name:
-                        <!-- this input field is bound to firstname in the order object -->
                         <input v-model.trim="order.Name">
                     </p>
                     <p>
                         Phone Number:
-                        <!-- this input field is bound to lastname in the order object -->
                         <input type="number" v-model.trim="order.Phone">
                     </p>
                     <button class="placeOrd" v-on:click="submitForm" :disabled="!validateDetails">Place Order</button>
@@ -108,7 +113,9 @@
             </div>
         </div>
     </div>
+    <!-- including the js file with all the subjects list -->
     <script src="classes.js"></script>
+    <!-- javascript for Vue and other functions -->
     <script type="text/javascript">
 
         let webstore = new Vue({
@@ -128,8 +135,11 @@
                 searchVal: '',
             },
             methods: {
+                // function for adding subject or class into cart
                 addToCart: function (product) {
+                    // stores only product id
                     this.cart.push(product.id);
+                    // stores the whole product in the list
                     this.scart.push(product);
                     // checking for the index of the product we are adding into the cart 
                     // its taking the id of the product in scart and checking if its same as the 
@@ -138,6 +148,7 @@
                     // directly updates the slots from here when a product is added to cart
                     this.products[productIndex].slotsAvailable--;
                 },
+                // funtion for removing a subject or class from the cart
                 removeFromCart: function (productId) {
                     // checking for the index of the product we are removing  
                     // its taking the id of the product in scart and checking if its same as the id pased in premove product 
@@ -152,50 +163,67 @@
                     // updates cartIsEmpty by checking whether its empty or not
                     this.cartIsEmpty = this.scart.length === 0;
                 },
+                // this for swicthing between checkout and home page
                 toggleCartPage: function () {
                     this.showProduct = this.showProduct ? false : true;
                 },
+                // function to check if there are slots available else it will disablt add to cart button
                 canAddToCart: function (product) {
                     return product.slotsAvailable > 0;
                 },
+                // get image of the subject or class added to cart
                 getProductImage: function (productId) {
                     const product = this.products.find(p => p.id === productId);
                     return product ? product.image : '';
                 },
+                // get subject of the subject or class added to cart
                 getProductSubject: function (productId) {
                     const product = this.products.find(p => p.id === productId);
                     return product ? product.subject : '';
                 },
+                // get price of the subject or class added to cart
                 getProductPrice: function (productId) {
                     const product = classes.find(p => p.id === productId);
                     return product ? product.price : 0;
                 },
+                // get location of the subject or class added to cart
                 getProductLocation: function (productId) {
                     const product = classes.find(p => p.id === productId);
                     return product ? product.location : '';
                 },
+                // function to place order
                 submitForm: function () {
                     alert("Purchase Completed\nYou're Enrolled in the subjects!!!!");
                     window.location.reload();
                 }
             },
             computed: {
+                // function gives the count of the items in cart
                 cartItemCount: function () {
-                    // return this.cart.length;
                     return this.scart.length;
                 },
+                // calculates total price of all products added to cart and updates when item is added or removed
                 totalPrice() {
                     return this.scart.reduce((total, product) => total + (this.getProductPrice(product.id) || 0), 0);
                 },
+                // validation of details enetered while placing order 
                 validateDetails: function () {
                     return /^[A-Za-z\s]+$/.test(this.order.Name) && /^[0-9]+$/.test(this.order.Phone);
                 },
+                // function to search for subject or class based on location and subject name 
+                // and also sort the products 
                 searchingAndSortedProducts: function () {
+                    // first we are storing all products in the filtered list 
                     let filteredList = this.products;
 
-                    // Apply search filter
+                    // search
+                    // the value entered in search bar is stored in searchVal
                     if (this.searchVal.trim().length > 0) {
+                        // using the filter function we are filtering all products that are returned
+                        // for the conditions inside the filter fucntion
                         filteredList = filteredList.filter((product) =>
+                        // checks if searchVal is there in subject or location so that it can return subjects 
+                        // that have those letters in subject or location
                             product.subject.toLowerCase().includes(this.searchVal.trim().toLowerCase()) ||
                             product.location.toLowerCase().includes(this.searchVal.trim().toLowerCase())
                         );
