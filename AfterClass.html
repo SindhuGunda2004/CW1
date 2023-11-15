@@ -43,7 +43,7 @@
             </nav>
 
             <div class="products-container">
-                <div v-for="product in filteredAndSortedProducts" class="product">
+                <div v-for="product in searchingAndSortedProducts" class="product">
                     <div class="content">
                         <figure>
                             <img v-bind:src="product.image" height="100px" width="100px" alt="Product Image">
@@ -52,7 +52,7 @@
                             <p>Subject: {{product.subject}} </p>
                             <p>Location: {{product.location}}</p>
                             <p>Price: AED {{product.price}} </p>
-                            <p>Slots Available: {{product.slotsAvailable - cartCount(product.id)}}</p>
+                            <p>Slots Available: {{product.slotsAvailable}}</p>
                         </div>
                     </div>
                     <button v-on:click="addToCart(product)" v-if="canAddToCart(product)">
@@ -61,9 +61,9 @@
                     <button disabled="disabled" v-else>
                         Add to Cart
                     </button>
-                    <span v-if="product.slotsAvailable === cartCount(product.id)">All Out!</span>
-                    <span v-else-if="product.slotsAvailable - cartCount(product.id) < 5">
-                        Only {{product.slotsAvailable - cartCount(product.id)}} left!
+                    <span v-if="product.slotsAvailable === 0">All Out!</span>
+                    <span v-else-if="product.slotsAvailable < 5">
+                        Only {{product.slotsAvailable}} left!
                     </span>
                     <span v-else>Buy Now!!</span>
                 </div>
@@ -131,39 +131,32 @@
                 addToCart: function (product) {
                     this.cart.push(product.id);
                     this.scart.push(product);
+                    // checking for the index of the product we are adding into the cart 
+                    // its taking the id of the product in scart and checking if its same as the 
+                    // id passed in add to cart function
                     const productIndex = this.products.findIndex(p => p.id === product.id);
-                    if (productIndex !== -1) {
-                        this.products[productIndex].slotsAvailable--;
-                    }
+                    // directly updates the slots from here when a product is added to cart
+                    this.products[productIndex].slotsAvailable--;
                 },
                 removeFromCart: function (productId) {
+                    // checking for the index of the product we are removing  
+                    // its taking the id of the product in scart and checking if its same as the id pased in premove product 
                     const index = this.scart.findIndex(product => product.id === productId);
-
-                    if (index !== -1) {
-                        const removedProduct = this.scart.splice(index, 1)[0];
-                        const productIndex = this.products.findIndex(p => p.id === removedProduct.id);
-
-                        if (productIndex !== -1) {
-                            this.products[productIndex].slotsAvailable++;
-                        }
-                    }
-
+                    // splice remove a specific product at specified index and 1 indicated that only 1 product has to be removed 
+                    // and we put [0] cuz we want the details directly instead of the details in the array
+                    // so basically by putting [0] we are accessing the first element of the array, so we are directly storing the element
+                    const removedProduct = this.scart.splice(index, 1)[0];
+                    const productIndex = this.products.findIndex(p => p.id === removedProduct.id);
+                    // directly updates the slots from here when a product is removed from cart
+                    this.products[productIndex].slotsAvailable++;
+                    // updates cartIsEmpty by checking whether its empty or not
                     this.cartIsEmpty = this.scart.length === 0;
                 },
                 toggleCartPage: function () {
                     this.showProduct = this.showProduct ? false : true;
                 },
-                cartCount(id) {
-                    let count = 0;
-                    for (let i = 0; i < this.scart.length; i++) {
-                        if (this.scart[i] === id) {
-                            count++;
-                        }
-                    }
-                    return count;
-                },
                 canAddToCart: function (product) {
-                    return product.slotsAvailable > this.cartCount(product.id);
+                    return product.slotsAvailable > 0;
                 },
                 getProductImage: function (productId) {
                     const product = this.products.find(p => p.id === productId);
@@ -197,7 +190,7 @@
                 validateDetails: function () {
                     return /^[A-Za-z\s]+$/.test(this.order.Name) && /^[0-9]+$/.test(this.order.Phone);
                 },
-                filteredAndSortedProducts: function () {
+                searchingAndSortedProducts: function () {
                     let filteredList = this.products;
 
                     // Apply search filter
