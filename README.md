@@ -1,6 +1,6 @@
 # CW1
 
-# link to th website
+# link to the hosted website
 # https://sindhugunda2004.github.io/CW1/AfterClass.html
 
 # link for the repository
